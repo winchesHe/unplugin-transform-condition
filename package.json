@@ -5,13 +5,13 @@
   "packageManager": "pnpm@9.9.0",
   "description": "",
   "license": "MIT",
-  "homepage": "https://github.com/antfu/unplugin-transform-condition#readme",
+  "homepage": "https://github.com/winchesHe/unplugin-transform-condition#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/antfu/unplugin-transform-condition.git"
+    "url": "git+https://github.com/winchesHe/unplugin-transform-condition.git"
   },
   "bugs": {
-    "url": "https://github.com/antfu/unplugin-transform-condition/issues"
+    "url": "https://github.com/winchesHe/unplugin-transform-condition/issues"
   },
   "keywords": [
     "unplugin",
