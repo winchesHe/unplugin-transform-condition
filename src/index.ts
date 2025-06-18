@@ -67,15 +67,21 @@ function findClosingTagPosition(code: string, startPos: number): number {
   return -1
 }
 
-function determineWrapperType(code: string, position: number): 'jsx' | 'expression' {
-  // 向前查找上下文，判断是否需要 {} 包装
+function determineWrapperType(code: string, position: number): 'jsx' | 'expression' | 'assignment' {
+  // 向前查找上下文，判断包装方式
   const before = code.slice(0, position).trim()
 
-  // 检查常见的 JSX 表达式上下文
+  // 检查是否在赋值表达式中（const/let/var variable =）
+  if (/(?:const|let|var)\s+\w+\s*=\s*$/.test(before)) {
+    return 'assignment'
+  }
+
+  // 检查常见的 JSX 直接返回上下文
   if (before.endsWith('(') || before.endsWith('return') || before.endsWith('{')) {
     return 'jsx'
   }
 
+  // 其他情况需要 {} 包装
   return 'expression'
 }
 
@@ -99,9 +105,15 @@ function processConditionsInMagicString(s: MagicString): boolean {
 
     let replacement: string
     if (wrapperType === 'jsx') {
+      // 直接在 JSX 中使用，如 return 语句
       replacement = `${match.condition} ? <>${match.content}</> : null`
     }
+    else if (wrapperType === 'assignment') {
+      // 赋值表达式，使用 Boolean() 但不用 {} 包装
+      replacement = `Boolean(${match.condition}) ? <>${match.content}</> : null`
+    }
     else {
+      // 其他表达式上下文，需要 {} 包装
       replacement = `{Boolean(${match.condition}) ? <>${match.content}</> : null}`
     }
 
